@@ -14,7 +14,7 @@ License: GPL2
 
 Thanks to Dayle Rees & co. for the styles: http://paste.laravel.com/css/style.css
 
-Copyright 2013  Ryan Durham  (email : Ryan Durham)
+Copyright 2013  Ryan Durham  (email : rydurham@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
