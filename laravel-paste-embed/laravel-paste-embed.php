@@ -30,8 +30,6 @@ Copyright 2013  Ryan Durham  (email : rydurham@gmail.com)
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
-// [lpe foo="foo-value"]
 function lpe_func( $atts ) {
     extract( shortcode_atts( array(
         'paste' => null,
