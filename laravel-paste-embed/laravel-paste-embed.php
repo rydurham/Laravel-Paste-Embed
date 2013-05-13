@@ -53,28 +53,26 @@ function lpe_func( $atts ) {
     $response = wp_remote_get($url);
     $response_code = wp_remote_retrieve_response_code( $response );
 
-    if ( $response_code != '200' ) 
-    {
+    if ( $response_code != '200' ) {
         $error_message = "Paste Error: " .  $response['response']['message'];
         return $error_message;
-    }
-    else 
-    {
-        
+    } else {
         //Parse the body of the response to pull out the relevant content.
         $dom = new DOMDocument();
-        $html = $dom->loadHTML( $response['body'] );
+        $html = $dom->loadHTML( wp_remote_retrieve_body( $response ) );
         $code = $dom->getElementsByTagName( 'code' )->item( 0 )->nodeValue;
-        $pasteOutput = "<div class=\"lpe_shell\" style=\"width: $width\">";
-        if ($caption) {
-            $pasteOutput .= "<div class=\"lpe_title\">$caption</div>";
-        }
-        $pasteOutput .= "<div class=\"lpe_link\"><a href=\"$url\" target=\"_blank\">link</a> </div>"
-            . "<pre class=\"prettyprint linenums \" style=\"height: $height;\">"
-            . htmlentities($code)
-            . "</pre></div>";
-
-        return $pasteOutput;
+        
+        //Capture the paste output in an object buffer.
+        ob_start();
+            echo "<div class=\"lpe_shell\" style=\"width: $width\">";
+            if ($caption) {
+                echo "<div class=\"lpe_title\">$caption</div>";
+            }
+            echo "<div class=\"lpe_link\"><a href=\"$url\" target=\"_blank\">link</a> </div>";
+            echo "<pre class=\"prettyprint linenums \" style=\"height: $height;\">";
+            echo htmlentities($code);
+            echo "</pre></div>";
+        return ob_get_clean();
     }
     
 }
@@ -82,14 +80,32 @@ add_shortcode( 'lpe', 'lpe_func' );
 
 
 /**
-* Register with hook 'wp_enqueue_scripts', which can be used for front end CSS and JavaScript
+* Enqueue stylesheet and js - only when needed.
 */
-add_action( 'wp_enqueue_scripts', 'prefix_add_lpe_stylesheet' );
-add_action( 'wp_enqueue_scripts', 'prefix_add_lpe_script' );
 
-/**
-* Enqueue stylesheet and js
-*/
+add_filter('the_posts', 'lpe_conditionally_enqueue'); // the_posts gets triggered before wp_head
+function lpe_conditionally_enqueue($posts){
+    if (empty($posts)) return $posts;
+ 
+    $shortcode_found = false; // use this flag to see if styles and scripts need to be enqueued
+    foreach ($posts as $post) {
+        if (stripos($post->post_content, '[lpe ') !== false) {
+            $shortcode_found = true; // bingo!
+            break;
+        }
+    }
+ 
+    if ($shortcode_found) {
+        // enqueue here
+        prefix_add_lpe_stylesheet();
+        prefix_add_lpe_script();
+    }
+ 
+    return $posts;
+
+    //from http://beerpla.net/2010/01/13/wordpress-plugin-development-how-to-include-css-and-javascript-conditionally-and-only-when-needed-by-the-posts/
+}
+
 function prefix_add_lpe_stylesheet() {
     wp_register_style( 'lpe-style', plugins_url( 'css/style.css', __FILE__ ) );
     wp_enqueue_style( 'lpe-style' );
@@ -102,7 +118,7 @@ function prefix_add_lpe_script() {
 
 
 /**
- * Add Prettify action to the footer.
+ * Add Prettify action to the header.
  */
 function lpe_header() {
     ?>
@@ -111,4 +127,4 @@ function lpe_header() {
     </script>
     <?php
 }
-add_action( 'wp_head', 'lpe_header' );
+add_action( 'wp_footer', 'lpe_header' );

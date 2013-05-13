@@ -1,6 +1,6 @@
 ## Laravel Paste Embed
 
-A wordpress plugin for embeding text from paste.laravel.comA Wordpress plugin to embed code from paste.laravel.com.  Still in beta - I have not been able to do much testing.
+A Wordpress plugin to embed code from paste.laravel.com.  Still in beta - I have not been able to do much testing.
 
 
 ### Installation
