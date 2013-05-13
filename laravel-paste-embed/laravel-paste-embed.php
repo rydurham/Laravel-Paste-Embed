@@ -1,18 +1,20 @@
 <?php
 /**
  * @package LaravePasteEmbed
- * @version 1.1 
+ * @version 1.2 
  */
 /*
 Plugin Name: Laravel Paste Embed
 Plugin URI: http://rydurham.com/plugins/laravel-paste-embed/
 Description: A plugin to embed pages & snippets from paste.laravel.com into a wordpress site. 
 Author: Ryan Durham
-Version: 1.1
+Version: 1.2
 Author URI: http://rydurham.com
 License: GPL2
 
 Thanks to Dayle Rees & co. for the styles: http://paste.laravel.com/css/style.css
+
+Thanks to Taylor Dewey (@tddewey) for the advice! 
 
 Copyright 2013  Ryan Durham  (email : rydurham@gmail.com)
 
@@ -31,29 +33,29 @@ Copyright 2013  Ryan Durham  (email : rydurham@gmail.com)
 */
 
 function lpe_func( $atts ) {
-    extract( shortcode_atts( array(
-        'paste' => null,
-        'caption' => null,
-        'width' => '100%',
-        'height' => 'auto'
-    ), $atts ) );
+    //Retrieve the shortcode attributes:
+    $paste = $atts['paste'];
+    $caption = $atts['caption'];
+    $width = ( isset($atts['width']) ) ? $atts['width'] : '100%';
+    $height = ( isset($atts['height']) ) ? $atts['height'] : 'auto';
 
     //Make sure there is a Paste URL destination.
-    if (!$paste) {
+    if ( ! $paste ) {
         return '';
     }
 
     //Prep for WP_Http action
-    if( !class_exists( 'WP_Http' ) )
+    if( ! class_exists( 'WP_Http' ) )
         include_once( ABSPATH . WPINC. '/class-http.php' );
     
     //Pull data from paste.laravel.com
-    $url = "http://paste.laravel.com/$paste";
-    $resp = wp_remote_get($url);
+    $url = esc_url("http://paste.laravel.com/$paste");
+    $response = wp_remote_get($url);
+    $response_code = wp_remote_retrieve_response_code( $response );
 
-    if ($resp['response']['code'] != '200') 
+    if ( $response_code != '200' ) 
     {
-        $error_message = "Paste Error: " .  $resp['response']['message'];
+        $error_message = "Paste Error: " .  $response['response']['message'];
         return $error_message;
     }
     else 
@@ -61,8 +63,8 @@ function lpe_func( $atts ) {
         
         //Parse the body of the response to pull out the relevant content.
         $dom = new DOMDocument();
-        $html = $dom->loadHTML($resp['body']);
-        $code = $dom->getElementsByTagName('code')->item(0)->nodeValue;
+        $html = $dom->loadHTML( $response['body'] );
+        $code = $dom->getElementsByTagName( 'code' )->item( 0 )->nodeValue;
         $pasteOutput = "<div class=\"lpe_shell\" style=\"width: $width\">";
         if ($caption) {
             $pasteOutput .= "<div class=\"lpe_title\">$caption</div>";
@@ -89,12 +91,12 @@ add_action( 'wp_enqueue_scripts', 'prefix_add_lpe_script' );
 * Enqueue stylesheet and js
 */
 function prefix_add_lpe_stylesheet() {
-    wp_register_style( 'lpe-style', plugins_url('css/style.css', __FILE__) );
+    wp_register_style( 'lpe-style', plugins_url( 'css/style.css', __FILE__ ) );
     wp_enqueue_style( 'lpe-style' );
 }
 
 function prefix_add_lpe_script() {
-    wp_register_script( 'lpe-script', plugins_url('js/prettify.js', __FILE__) );
+    wp_register_script( 'lpe-script', plugins_url( 'js/prettify.js' , __FILE__ ) );
     wp_enqueue_script( 'lpe-script' );
 }   
 
@@ -109,4 +111,4 @@ function lpe_header() {
     </script>
     <?php
 }
-add_action('wp_head', 'lpe_header');
+add_action( 'wp_head', 'lpe_header' );
