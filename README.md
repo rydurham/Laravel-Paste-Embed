@@ -15,10 +15,10 @@ There are two ways to install this plugin:
 2. Grab the identifying bit from the end of the URL. 'cJ9' in this case:
     http://paste.laravel.com/cJ9
 3. In your page or post add this shortcode, with the relevant part of the URL in question:
-    [lpe paste='cJ9']
+    ```[lpe paste='cJ9']```
 
 ### Thanks
-I have shamelessly stolen the styling from the paste.laravel.com site itself. Many thanks to [Dayle Rees](https://twitter.com/daylerees)
+I have shamelessly stolen the styling from the paste.laravel.com site itself. Many thanks to [Dayle Rees](https://twitter.com/daylerees).
 
 
 ### Website:
