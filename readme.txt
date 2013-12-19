@@ -1,6 +1,6 @@
 === Laravel-Paste-Embed ===
 Contributors: rydurham
-Donate link: rydurham.com
+Donate link: http://www.ryandurham.com/category/code/
 Tags: Laravel Paste
 Requires at least: 3.3
 Tested up to: 3.6
@@ -12,7 +12,7 @@ A WordPress plugin for embedding text from paste.laravel.com.
 
 == Description ==
 
-A Wordpress plugin to embed code from paste.laravel.com.  Still in beta - I have not been able to do much testing.
+A Wordpress plugin to embed code from paste.laravel.com.  
 
 == Installation ==
 
