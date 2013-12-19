@@ -1,14 +1,14 @@
 <?php
 /**
  * @package LaravePasteEmbed
- * @version 1.2 
+ * @version 1.2.1
  */
 /*
 Plugin Name: Laravel Paste Embed
 Plugin URI: http://rydurham.com/plugins/laravel-paste-embed/
 Description: A plugin to embed pages & snippets from paste.laravel.com into a wordpress site. 
 Author: Ryan Durham
-Version: 1.2
+Version: 1.2.1
 Author URI: http://rydurham.com
 License: GPL2
 
