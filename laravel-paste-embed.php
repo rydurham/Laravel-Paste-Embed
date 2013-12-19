@@ -5,10 +5,10 @@
  */
 /*
 Plugin Name: Laravel Paste Embed
-Plugin URI: http://rydurham.com/plugins/laravel-paste-embed/
+Plugin URI: http://www.ryandurham.com/2013/04/06/laravel-paste-embed/
 Description: A plugin to embed pages & snippets from paste.laravel.com into a wordpress site. 
 Author: Ryan Durham
-Version: 1.2.1
+Version: 1.3
 Author URI: http://rydurham.com
 License: GPL2
 
@@ -82,7 +82,6 @@ add_shortcode( 'lpe', 'lpe_func' );
 /**
 * Enqueue stylesheet and js - only when needed.
 */
-
 add_filter('the_posts', 'lpe_conditionally_enqueue'); // the_posts gets triggered before wp_head
 function lpe_conditionally_enqueue($posts){
     if (empty($posts)) return $posts;
@@ -99,6 +98,7 @@ function lpe_conditionally_enqueue($posts){
         // enqueue here
         prefix_add_lpe_stylesheet();
         prefix_add_lpe_script();
+        add_action( 'wp_footer', 'lpe_header' );
     }
  
     return $posts;
@@ -106,16 +106,21 @@ function lpe_conditionally_enqueue($posts){
     //from http://beerpla.net/2010/01/13/wordpress-plugin-development-how-to-include-css-and-javascript-conditionally-and-only-when-needed-by-the-posts/
 }
 
+/**
+ * Add the LPE Styles
+ */
 function prefix_add_lpe_stylesheet() {
     wp_register_style( 'lpe-style', plugins_url( 'css/style.css', __FILE__ ) );
     wp_enqueue_style( 'lpe-style' );
 }
 
+/**
+ * Add the LPE Pretty Print Javascript
+ */
 function prefix_add_lpe_script() {
     wp_register_script( 'lpe-script', plugins_url( 'js/prettify.js' , __FILE__ ) );
     wp_enqueue_script( 'lpe-script' );
 }   
-
 
 /**
  * Add Prettify action to the header.
@@ -127,4 +132,4 @@ function lpe_header() {
     </script>
     <?php
 }
-add_action( 'wp_footer', 'lpe_header' );
+
