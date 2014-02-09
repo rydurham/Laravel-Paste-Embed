@@ -50,12 +50,14 @@ function lpe_func( $atts ) {
     
     //Pull data from paste.laravel.com
     $url = esc_url("http://laravel.io/bin/$paste");
-    $response = wp_remote_get($url);
+    $response = wp_remote_get($url, array('timeout' => 30));
     $response_code = wp_remote_retrieve_response_code( $response );
 
     if ( $response_code != '200' ) {
-        $error_message = "Paste Error: " .  $response['response']['message'];
-        return $error_message;
+        $error = $response->get_error_code();
+        $message = "<b>Paste Bin Error:</b> " . $response->get_error_message($error);
+
+        return $message;
     } else {
         //Parse the body of the response to pull out the relevant content.
         $dom = new DOMDocument();
