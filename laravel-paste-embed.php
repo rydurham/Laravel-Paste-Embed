@@ -1,18 +1,18 @@
 <?php
 /**
  * @package LaravePasteEmbed
- * @version 1.2.1
+ * @version 1.4
  */
 /*
 Plugin Name: Laravel Paste Embed
-Plugin URI: http://www.ryandurham.com/2013/04/06/laravel-paste-embed/
-Description: A plugin to embed pages & snippets from paste.laravel.com into a wordpress site. 
+Plugin URI: http://www.ryandurham.com/projects/laravel-paste-embed/
+Description: A plugin to embed pages & snippets from laravel.io/bin into a wordpress site. 
 Author: Ryan Durham
-Version: 1.3
-Author URI: http://rydurham.com
+Version: 1.4
+Author URI: http://www.ryandurham.com/projects
 License: GPL2
 
-Thanks to Dayle Rees & co. for the styles: http://paste.laravel.com/css/style.css
+Thanks to Dayle Rees & co. for the styles: http://paste.laravel.com/css/style.css  (link no longer works)
 
 Thanks to Taylor Dewey (@tddewey) for the advice! 
 
@@ -49,7 +49,7 @@ function lpe_func( $atts ) {
         include_once( ABSPATH . WPINC. '/class-http.php' );
     
     //Pull data from paste.laravel.com
-    $url = esc_url("http://paste.laravel.com/$paste");
+    $url = esc_url("http://laravel.io/bin/$paste");
     $response = wp_remote_get($url);
     $response_code = wp_remote_retrieve_response_code( $response );
 
@@ -59,8 +59,10 @@ function lpe_func( $atts ) {
     } else {
         //Parse the body of the response to pull out the relevant content.
         $dom = new DOMDocument();
-        $html = $dom->loadHTML( wp_remote_retrieve_body( $response ) );
-        $code = $dom->getElementsByTagName( 'code' )->item( 0 )->nodeValue;
+        libxml_use_internal_errors(true);
+        $html = @$dom->loadHTML( wp_remote_retrieve_body( $response ) );
+        
+        $code = $dom->getElementsByTagName( 'pre' )->item( 0 )->nodeValue;
         
         //Capture the paste output in an object buffer.
         ob_start();
@@ -68,7 +70,7 @@ function lpe_func( $atts ) {
             if ($caption) {
                 echo "<div class=\"lpe_title\">$caption</div>";
             }
-            echo "<div class=\"lpe_link\"><a href=\"$url\" target=\"_blank\">link</a> </div>";
+            echo "<div class=\"lpe_link\"><a href=\"$url\" target=\"_blank\">bin/$paste</a> </div>";
             echo "<pre class=\"prettyprint linenums \" style=\"height: $height;\">";
             echo htmlentities($code);
             echo "</pre></div>";

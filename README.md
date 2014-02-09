@@ -17,6 +17,12 @@ There are two ways to install this plugin:
 3. In your page or post add this shortcode, with the relevant part of the URL in question:
     ```[lpe paste='cJ9']```
 
+
+### History
+* 1.4 - Updated to work with [laravel.io/bin](laravel.io/bin)
+* 1.3 - Bug Fixes / Refractoring
+* 1.0 - Initial Release
+
 ### Thanks
 I have shamelessly stolen the styling from the paste.laravel.com site itself. Many thanks to [Dayle Rees](https://twitter.com/daylerees).
 
