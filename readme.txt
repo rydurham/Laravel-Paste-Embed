@@ -1,7 +1,7 @@
 === Laravel-Paste-Embed ===
 Contributors: rydurham
 Donate link: http://www.ryandurham.com/projects
-Tags: Laravel Paste
+Tags: Laravel, Laravel.io, Paste, Bin
 Requires at least: 3.3
 Tested up to: 3.8
 Stable tag: 1.4
